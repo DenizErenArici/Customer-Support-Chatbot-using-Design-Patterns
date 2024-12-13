@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a5acd, #4e79a2); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #chatbox {
+            width: 400px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        #messages {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .user-message, .bot-message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .user-message {
+            background-color: #d1f7ff;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #eaeaea;
+            text-align: left;
+        }
+        .user-message span.timestamp, 
+        .bot-message span.timestamp {
+            font-size: 10px;
+            color: gray;
+            position: absolute;
+            bottom: -20px;
+        }
+        .user-message span.timestamp {
+            right: 10px;
+        }
+        .bot-message span.timestamp {
+            left: 10px;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #service-type {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .service-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <div id="service-type"></div>
+        <div id="messages"></div>
+        <div class="service-selection">
+            <button onclick="selectServiceType('Sales Representative')">Sales Representative</button>
+            <button onclick="selectServiceType('Technical Support')">Technical Support</button>
+            <button onclick="selectServiceType('Billing Issues')">Billing Issues</button>
+        </div>
+        <div id="input-section" style="display: none;">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedServiceType = "";
+
+        function selectServiceType(type) {
+            const timestamp = new Date().toLocaleString();
+            selectedServiceType = type;
+            document.getElementById("service-type").textContent = `Selected Service: ${selectedServiceType}`;
+            document.querySelector(".service-selection").style.display = "none";
+            document.getElementById("messages").innerHTML = "";
+            document.getElementById("input-section").style.display = "flex";
+            appendMessage(`You have selected ${type}. How can I assist you?`, "bot-message",timestamp);
+        }
+
+        document.getElementById("user-input").addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const userInput = document.getElementById("user-input").value;
+            if (userInput.trim() === "") return;
+
+            const timestamp = new Date().toLocaleString();
+            appendMessage(userInput, "user-message", timestamp);
+
+            fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: userInput, session_id: Date.now() })
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage(data.response, "bot-message", new Date().toLocaleString());
+            });
+
+            document.getElementById("user-input").value = "";
+        }
+
+        function appendMessage(message, type, timestamp) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add(type);
+            messageDiv.innerHTML = `${message}<br><span class="timestamp">${timestamp}</span>`;
+            document.getElementById("messages").appendChild(messageDiv);
+            document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+        }
+    </script>
+</body>
+</html>

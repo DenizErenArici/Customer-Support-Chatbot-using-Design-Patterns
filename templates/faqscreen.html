@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a5acd, #4e79a2); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #chatbox {
+            width: 400px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+        #messages {
+            margin-bottom: 20px;
+        }
+        .faq-button {
+            display: block;
+            width: 100%;
+            background-color: #eaeaea;
+            border: none;
+            padding: 10px;
+            text-align: left;
+            font-size: 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .faq-button:hover {
+            background-color: #d1f7ff;
+        }
+        .faq-answer {
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-left: 4px solid #007BFF;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .representative-button {
+            display: block;
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .representative-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <div id="messages"></div>
+        <button class="representative-button" onclick="connectToRepresentative()">Would you like to speak with a representative?</button>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById("messages");
+
+        const faqs = {
+            "Order Status": "Please contact customer service for the status of your order.",
+            "Return Policy": "You can return our products within 30 days",
+            "Delivery Time": "Our standard delivery time is 3-5 working days."
+        };
+
+        function showFAQs() {
+            messagesDiv.innerHTML = ""; 
+            appendMessage("Please select a topic:");
+            for (const [key, value] of Object.entries(faqs)) {
+                const button = document.createElement("button");
+                button.textContent = key;
+                button.classList.add("faq-button");
+
+                const answer = document.createElement("div");
+                answer.textContent = value;
+                answer.classList.add("faq-answer");
+
+                button.onclick = () => {
+                    if (answer.style.display === "none" || answer.style.display === "") {
+                        answer.style.display = "block";
+                    } else {
+                        answer.style.display = "none";
+                    }
+                };
+
+                messagesDiv.appendChild(button);
+                messagesDiv.appendChild(answer);
+            }
+        }
+
+        function appendMessage(message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.textContent = message;
+            messageDiv.style.marginBottom = "10px";
+            messagesDiv.appendChild(messageDiv);
+        }
+
+        function connectToRepresentative() {
+            window.location.href = '/connect';
+        }
+
+        showFAQs();
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a5acd, #4e79a2); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #chatbox {
+            width: 400px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        #messages {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .user-message, .bot-message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user-message {
+            background-color: #d1f7ff;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #eaeaea;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        #service-type {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .service-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbox">
+        <div id="service-type"></div>
+        <div id="messages"></div>
+        <div class="service-selection">
+            <button onclick="selectServiceType('FAQ')">FAQ</button>
+            <button onclick="selectServiceType('Customer Representative')">Customer Representative</button>
+        </div>
+        <div id="input-section" style="display: none;">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedServiceType = "";
+
+        function selectServiceType(type) {
+            selectedServiceType = type;
+            if (type === 'FAQ') {
+                window.location.href = '/faq';
+            } else {
+                window.location.href = '/connect';
+            }
+        }
+    </script>
+</body>
+</html>
